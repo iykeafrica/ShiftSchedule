@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 mNow = new Date(year, month, (dayOfMonth - 1));
                 dateFormatter();
 
-                mDayOfMonth.setText("" + dayOfMonth);
+                mDayOfMonth.setText("" + dayOfMonth + "");
                 shiftDutyCheck();
             }
         });

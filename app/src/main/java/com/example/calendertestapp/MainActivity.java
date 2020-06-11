@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -21,11 +22,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
-    TextView mShiftView, mWeekday, mDayOfMonth;
+    TextView mShiftView, mWeekday, mDayOfMonth, mMonth, mShiftDays;
     CalendarView mCalendarView;
     private Date mNow;
     private String mCurrentDate;
     private static final String  mFinalDate = "02/01/1970";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
         mNow = new Date();
 
+        mMonth = findViewById(R.id.month_view);
+        mShiftDays = findViewById(R.id.shift_days);
         mWeekday = findViewById(R.id.weekday_view);
         mDayOfMonth = findViewById(R.id.day_of_month_view);
         mShiftView = findViewById(R.id.shift_view);
@@ -46,16 +50,22 @@ public class MainActivity extends AppCompatActivity {
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 mCurrentDate = dayOfMonth + "/" + (month + 1) + "/" + year;
 
-                mNow = new Date(year, month, dayOfMonth);
+                mNow = new Date(year, month, (dayOfMonth - 1));
+                dateFormatter();
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE");
                 mDayOfMonth.setText("" + dayOfMonth);
-                mWeekday.setText("" + simpleDateFormat.format(mNow));
-
                 shiftDutyCheck();
             }
         });
 
+    }
+
+    private void dateFormatter() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE");
+        Format formatter = new SimpleDateFormat("MMMM");
+
+        mMonth.setText("" + formatter.format(mNow));
+        mWeekday.setText("" + simpleDateFormat.format(mNow));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -65,8 +75,7 @@ public class MainActivity extends AppCompatActivity {
 //        LocalDate today = LocalDate.now();
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 //        mDateView.setText("" + today.format(formatter));
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE");
-        mWeekday.setText("" + simpleDateFormat.format(mNow));
+        dateFormatter();
 
         Calendar c = Calendar.getInstance();
         c.setTime(mNow);

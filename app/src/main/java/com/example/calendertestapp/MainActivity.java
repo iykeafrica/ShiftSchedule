@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.lang.reflect.Field;
 import java.text.Format;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private Date mNow;
     private String mCurrentDate;
     private static final String  mFinalDate = "02/01/1970";
+    int count = 0;
+    int countBar = 0;
 
 
     @Override
@@ -41,9 +44,7 @@ public class MainActivity extends AppCompatActivity {
         mWeekday = findViewById(R.id.weekday_view);
         mDayOfMonth = findViewById(R.id.day_of_month_view);
         mShiftView = findViewById(R.id.shift_view);
-        mShiftView.setVisibility(View.GONE);
         mCalendarView = findViewById(R.id.calendar_view);
-
 
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -55,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
 
                 mDayOfMonth.setText("" + dayOfMonth);
                 shiftDutyCheck();
+                try {
+                    shiftDayCalculation();
+                    mShiftDays.setText("" + count);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -90,6 +97,155 @@ public class MainActivity extends AppCompatActivity {
 
         mCurrentDate = sDayOfMonth + "/" + sMonth + "/" + sYear;
         shiftDutyCheck();
+        try {
+            shiftDayCalculation();
+            mShiftDays.setText("" + count);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void shiftDayCalculation() throws ParseException {
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(mNow);
+
+        int month = cal.get(Calendar.MONTH) + 1;
+        String sMonth = String.valueOf(month);
+        int year = cal.get(Calendar.YEAR);
+        String sYear = String.valueOf(year);
+        int firstDayOfMonth = 1; //cal.getActualMinimum(Calendar.DATE);
+        int lastDayOfMonth = cal.getActualMaximum(Calendar.DATE);
+
+        for (int i = firstDayOfMonth; i <= lastDayOfMonth; i++){
+
+            if (i == 1){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 2){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 3){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 4){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 5){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 6){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 7){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 8){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 9){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 10){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 11){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 12){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 13){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 14){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 15){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 16){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 17){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 18){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 19){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 20){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 21){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 22){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 23){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 24){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 25){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 26){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 27){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 28){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 29){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 30){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            } else if (i == 31){
+                String sDay = String.valueOf(i);
+                mCurrentDate = sDay + "/" + sMonth + "/" + sYear;
+                shiftDutyCheck();
+            }
+
+        }
     }
 
     private void shiftDutyCheck() {
@@ -104,31 +260,31 @@ public class MainActivity extends AppCompatActivity {
             int b = a % 9;
             if (b == 8) {
                 mShiftView.setText("First Morning Duty");
-                mShiftView.setVisibility(View.VISIBLE);
+                count++;
             } else if (b == 0) {
                 mShiftView.setText("Second Morning Duty");
-                mShiftView.setVisibility(View.VISIBLE);
+                count++;
             } else if (b == 1) {
                 mShiftView.setText("Third Morning Duty");
-                mShiftView.setVisibility(View.VISIBLE);
+                count++;
             } else if (b == 2) {
                 mShiftView.setText("First Night Duty");
-                mShiftView.setVisibility(View.VISIBLE);
+                count++;
             } else if (b == 3) {
                 mShiftView.setText("Second Night Duty");
-                mShiftView.setVisibility(View.VISIBLE);
+                count++;
             } else if (b == 4) {
                 mShiftView.setText("Third Night Duty");
-                mShiftView.setVisibility(View.VISIBLE);
+                count++;
             } else if (b == 5) {
                 mShiftView.setText("First Off Duty");
-                mShiftView.setVisibility(View.VISIBLE);
+                countBar++;
             } else if (b == 6) {
                 mShiftView.setText("Second Off Duty");
-                mShiftView.setVisibility(View.VISIBLE);
+                countBar++;
             } else if (b == 7) {
                 mShiftView.setText("Third Off Duty");
-                mShiftView.setVisibility(View.VISIBLE);
+                countBar++;
             }
         } catch (Exception exception) {
             Toast.makeText(MainActivity.this, "Unable to find difference", Toast.LENGTH_SHORT).show();

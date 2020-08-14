@@ -18,46 +18,76 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/shift_view"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="18sp"
-            android:fontFamily="@font/roboto_black"
-            android:text="First Morning Shift"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/day_of_month_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="26dp"
-            android:textStyle="bold"
-            android:fontFamily="@font/roboto_black"
-            android:text="05"
-            android:textSize="50sp"/>
+            android:layout_height="match_parent"
+            android:id="@+id/calender_container"
+            app:layout_constraintBottom_toBottomOf="@+id/line1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/line1">
 
             <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                app:srcCompat="@drawable/src" />
+                android:id="@+id/imageView2"
+                android:layout_width="160dp"
+                android:layout_height="120dp"
+                app:layout_constraintBottom_toBottomOf="@+id/calender_container"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/calender_container"
+                app:srcCompat="@drawable/calendar_today" />
 
-        <TextView
-            android:id="@+id/weekday_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:fontFamily="@font/roboto_black"
-            android:text="WEDNESDAY"
-            android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/shift_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="18sp"
+                android:fontFamily="@font/roboto_black"
+                android:text="First Morning Shift"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintStart_toStartOf="@id/calender_container"
+                app:layout_constraintTop_toTopOf="@id/calender_container"
+                app:layout_constraintEnd_toEndOf="@id/calender_container"
+                android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/day_of_month_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:fontFamily="@font/roboto_black"
+                android:text="05"
+                android:textColor="@color/colorPrimary"
+                android:textSize="50sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/calender_container"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/calender_container"/>
+
+            <TextView
+                android:id="@+id/weekday_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_black"
+                android:text="WEDNESDAY"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@id/day_of_month_view"
+                app:layout_constraintStart_toStartOf="@id/calender_container"
+                app:layout_constraintEnd_toEndOf="@id/calender_container"
+                app:layout_constraintBottom_toBottomOf="@id/calender_container"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <!--            <ImageView-->
+        <!--                android:id="@+id/imageView"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="30dp"-->
+        <!--                app:srcCompat="@drawable/src" />-->
 
     </LinearLayout>
 

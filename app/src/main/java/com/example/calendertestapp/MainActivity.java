@@ -17,16 +17,18 @@ import java.lang.reflect.Field;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class MainActivity extends AppCompatActivity {
     TextView mShiftView, mWeekday, mDayOfMonth, mMonth, mShiftDays;
     CalendarView mCalendarView;
     private Date mNow;
     private String mCurrentDate;
-    private static final String  mFinalDate = "02/01/1970";
+    private static final String mFinalDate = "02/01/1970";
 
 
     @Override
@@ -41,11 +43,11 @@ public class MainActivity extends AppCompatActivity {
         mWeekday = findViewById(R.id.weekday_view);
         mDayOfMonth = findViewById(R.id.day_of_month_view);
         mShiftView = findViewById(R.id.shift_view);
-        mShiftView.setVisibility(View.GONE);
         mCalendarView = findViewById(R.id.calendar_view);
 
 
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 mCurrentDate = dayOfMonth + "/" + (month + 1) + "/" + year;
@@ -55,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
 
                 mDayOfMonth.setText("" + dayOfMonth + "");
                 shiftDutyCheck();
+
+                //calculateDaysInMonth(year, month + 1);
+                calDaysInMonth(year, month, dayOfMonth);
             }
         });
 
@@ -104,35 +109,61 @@ public class MainActivity extends AppCompatActivity {
             int b = a % 9;
             if (b == 8) {
                 mShiftView.setText("First Morning Duty");
-                mShiftView.setVisibility(View.VISIBLE);
             } else if (b == 0) {
                 mShiftView.setText("Second Morning Duty");
-                mShiftView.setVisibility(View.VISIBLE);
             } else if (b == 1) {
                 mShiftView.setText("Third Morning Duty");
-                mShiftView.setVisibility(View.VISIBLE);
             } else if (b == 2) {
                 mShiftView.setText("First Night Duty");
-                mShiftView.setVisibility(View.VISIBLE);
             } else if (b == 3) {
                 mShiftView.setText("Second Night Duty");
-                mShiftView.setVisibility(View.VISIBLE);
             } else if (b == 4) {
                 mShiftView.setText("Third Night Duty");
-                mShiftView.setVisibility(View.VISIBLE);
             } else if (b == 5) {
                 mShiftView.setText("First Off Duty");
-                mShiftView.setVisibility(View.VISIBLE);
             } else if (b == 6) {
                 mShiftView.setText("Second Off Duty");
-                mShiftView.setVisibility(View.VISIBLE);
             } else if (b == 7) {
                 mShiftView.setText("Third Off Duty");
-                mShiftView.setVisibility(View.VISIBLE);
             }
         } catch (Exception exception) {
             Toast.makeText(MainActivity.this, "Unable to find difference", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void calculateDaysInMonth(int yearToCal, int monthToCal) {
+        //Java 8 and above
+        YearMonth yearMonthObject = YearMonth.of(yearToCal, monthToCal);
+        int daysInMonth = yearMonthObject.lengthOfMonth();
+        mShiftDays.setText("" + daysInMonth);
+    }
+
+    public void calDaysInMonth(int yearToCal, int monthToCal, int daysToCal) {
+        //Java 7 and below
+        // Create a calendar object and set year and month
+        Calendar calendar = new GregorianCalendar(yearToCal, monthToCal, daysToCal);
+
+        // Get the number of days in that month
+        int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        mShiftDays.setText("" + daysInMonth);
+    }
+
+    public void calDaysInMonthShift(int yearToCal, int monthToCal, int daysOfMonthToCal) {
+        //Java 7 and below
+        // Create a calendar object and set year and month
+        Calendar calendar = new GregorianCalendar(yearToCal, monthToCal, daysOfMonthToCal);
+
+        // Get the number of days in that month
+        int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+//        mShiftDays.setText("" + daysInMonth);
+        int dIM = (((31 - daysInMonth) + 1) % 9);
+        for (int i = daysInMonth; i <= 1; i--){
+
+        }
 
     }
+
+
+
 }

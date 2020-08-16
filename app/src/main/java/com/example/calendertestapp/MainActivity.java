@@ -4,29 +4,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Field;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
     TextView mShiftView, mWeekday, mDayOfMonth, mMonth, mShiftDays;
     CalendarView mCalendarView;
-    private Date mNow;
+    private Date mNow, mOther;
     private String mCurrentDate;
     private static final String mFinalDate = "02/01/1970";
 
@@ -37,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mNow = new Date();
+        mOther = new Date();
 
         mMonth = findViewById(R.id.month_view);
         mShiftDays = findViewById(R.id.shift_days);
@@ -53,13 +50,12 @@ public class MainActivity extends AppCompatActivity {
                 mCurrentDate = dayOfMonth + "/" + (month + 1) + "/" + year;
 
                 mNow = new Date(year, month, (dayOfMonth - 1));
-                dateFormatter();
+                mOther = new Date(year, month, dayOfMonth);
 
-                mDayOfMonth.setText("" + dayOfMonth + "");
+                dateFormatter();
                 shiftDutyCheck();
 
-                //calculateDaysInMonth(year, month + 1);
-                calDaysInMonth(year, month, dayOfMonth);
+                shiftWorkingDays(year, month, dayOfMonth);
             }
         });
 
@@ -69,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE");
         Format formatter = new SimpleDateFormat("MMMM");
 
-        mMonth.setText("" + formatter.format(mNow));
+        mMonth.setText("" + formatter.format(mOther));
         mWeekday.setText("" + simpleDateFormat.format(mNow));
     }
 
@@ -80,21 +76,21 @@ public class MainActivity extends AppCompatActivity {
 //        LocalDate today = LocalDate.now();
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 //        mDateView.setText("" + today.format(formatter));
-        dateFormatter();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(mNow);
 
-        Calendar c = Calendar.getInstance();
-        c.setTime(mNow);
-
-        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-        String sDayOfMonth = String.valueOf(dayOfMonth);
-        int month = c.get(Calendar.MONTH) + 1;
-        String sMonth = String.valueOf(month);
-        int year = c.get(Calendar.YEAR);
-        String sYear = String.valueOf(year);
+        String sDayOfMonth = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+        String sMonth = String.valueOf(cal.get(Calendar.MONTH) + 1);
+        String sYear = String.valueOf(cal.get(Calendar.YEAR));
         mDayOfMonth.setText(sDayOfMonth);
 
         mCurrentDate = sDayOfMonth + "/" + sMonth + "/" + sYear;
         shiftDutyCheck();
+
+        dateFormatter();
+
+
+        int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
     private void shiftDutyCheck() {
@@ -131,6 +127,50 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void shiftWorkingDays(int yearToCal, int monthToCal, int daysOfMonthToCal) {
+        Calendar calendar = new GregorianCalendar(yearToCal, monthToCal, daysOfMonthToCal);
+        int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+        int count = 0;
+
+        for (int i = 1; i <= daysInMonth; i++) {
+            //Log.i(TAG, "Count Down Is " + i);
+
+            String sDayOfMonth = String.valueOf(i);
+            String sMonth = String.valueOf(monthToCal + 1);
+            String sYear = String.valueOf(yearToCal);
+            //Log.i(TAG, "DayOfMonth Count is " + sDayOfMonth);
+
+            String currentDate = sDayOfMonth + "/" + (sMonth) + "/" + sYear;
+            Log.i(TAG, "Current Date Count is " + currentDate);
+
+            try {
+                SimpleDateFormat dates = new SimpleDateFormat("dd/MM/yyyy");
+                Date date1 = dates.parse(currentDate);
+                Log.i(TAG, "Formatted Date Count is " + date1);
+
+                Date date2 = dates.parse(mFinalDate);
+                long difference = date1.getTime() - date2.getTime();
+                //Log.i(TAG, "Difference of Date Count is " + difference);
+
+                long differenceDates = difference / (24 * 60 * 60 * 1000);
+                Log.i(TAG, "Difference of Date Count is " + differenceDates);
+
+                int a = (int) differenceDates;
+                int b = a % 9;
+                if (b == 8 || b == 0 || b == 1 || b == 2 || b == 3 || b == 4) {
+                    count++;
+                    Log.i(TAG, "Testing Count is " + count);
+                }
+
+            } catch (Exception exception) {
+                Toast.makeText(MainActivity.this, "Unable to find difference", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        mShiftDays.setText("" + count);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void calculateDaysInMonth(int yearToCal, int monthToCal) {
         //Java 8 and above
@@ -148,22 +188,6 @@ public class MainActivity extends AppCompatActivity {
         int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         mShiftDays.setText("" + daysInMonth);
     }
-
-    public void calDaysInMonthShift(int yearToCal, int monthToCal, int daysOfMonthToCal) {
-        //Java 7 and below
-        // Create a calendar object and set year and month
-        Calendar calendar = new GregorianCalendar(yearToCal, monthToCal, daysOfMonthToCal);
-
-        // Get the number of days in that month
-        int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-//        mShiftDays.setText("" + daysInMonth);
-        int dIM = (((31 - daysInMonth) + 1) % 9);
-        for (int i = daysInMonth; i <= 1; i--){
-
-        }
-
-    }
-
 
 
 }

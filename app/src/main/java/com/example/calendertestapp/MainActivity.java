@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 mNow = new Date(year, month, (dayOfMonth - 1));
                 mOther = new Date(year, month, dayOfMonth);
 
+                mDayOfMonth.setText("" + dayOfMonth);
                 dateFormatter();
                 shiftDutyCheck();
 

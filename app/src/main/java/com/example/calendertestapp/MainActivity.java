@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,12 +21,16 @@ import java.util.GregorianCalendar;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    TextView mShiftView, mWeekday, mDayOfMonth, mMonth, mShiftDays;
-    CalendarView mCalendarView;
+    private TextView mShiftView, mWeekday, mDayOfMonth, mMonth, mShiftDays;
     private Date mNow, mOther;
     private String mCurrentDate;
     private static final String mFinalDate = "02/01/1970";
-
+    private int iYear, iMonth, iDayOfMonth;
+    private int mDaysInMonth;
+    private String mSMonth;
+    private String mSYear;
+    private SimpleDateFormat dates = new SimpleDateFormat("dd/MM/yyyy");
+    private CalendarView mCalendarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +42,25 @@ public class MainActivity extends AppCompatActivity {
 
         mMonth = findViewById(R.id.month_view);
         mShiftDays = findViewById(R.id.shift_days);
+        mShiftDays.setVisibility(View.GONE);
         mWeekday = findViewById(R.id.weekday_view);
         mDayOfMonth = findViewById(R.id.day_of_month_view);
         mShiftView = findViewById(R.id.shift_view);
         mCalendarView = findViewById(R.id.calendar_view);
 
+        calenderDateClick();
 
+    }
+
+    private void calenderDateClick() {
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                iYear = year;
+                iMonth = month;
+                iDayOfMonth = dayOfMonth;
+
                 mCurrentDate = dayOfMonth + "/" + (month + 1) + "/" + year;
 
                 mNow = new Date(year, month, (dayOfMonth - 1));
@@ -55,7 +69,9 @@ public class MainActivity extends AppCompatActivity {
                 dateFormatter();
                 shiftDutyCheck();
 
-                shiftWorkingDays(year, month, dayOfMonth);
+                Calendar calendar = new GregorianCalendar(year, month, dayOfMonth);
+                mDaysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+                shiftWorkingDaysOnCreate();
             }
         });
 
@@ -80,29 +96,26 @@ public class MainActivity extends AppCompatActivity {
         cal.setTime(mNow);
 
         String sDayOfMonth = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
-        String sMonth = String.valueOf(cal.get(Calendar.MONTH) + 1);
-        String sYear = String.valueOf(cal.get(Calendar.YEAR));
         mDayOfMonth.setText(sDayOfMonth);
+        mSMonth = String.valueOf(cal.get(Calendar.MONTH) + 1);
+        mSYear = String.valueOf(cal.get(Calendar.YEAR));
 
-        mCurrentDate = sDayOfMonth + "/" + sMonth + "/" + sYear;
+        mCurrentDate = sDayOfMonth + "/" + mSMonth + "/" + mSYear;
         shiftDutyCheck();
-
         dateFormatter();
 
-
-        int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        mDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        shiftWorkingDaysOnResume();
     }
 
     private void shiftDutyCheck() {
         try {
-            SimpleDateFormat dates = new SimpleDateFormat("dd/MM/yyyy");
             Date date1 = dates.parse(mCurrentDate);
             Date date2 = dates.parse(mFinalDate);
             long difference = date1.getTime() - date2.getTime();
             long differenceDates = difference / (24 * 60 * 60 * 1000);
 
-            int a = (int) differenceDates;
-            int b = a % 9;
+            int b = (int) differenceDates % 9;
             if (b == 8) {
                 mShiftView.setText("First Morning Duty");
             } else if (b == 0) {
@@ -127,25 +140,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void shiftWorkingDays(int yearToCal, int monthToCal, int daysOfMonthToCal) {
-        Calendar calendar = new GregorianCalendar(yearToCal, monthToCal, daysOfMonthToCal);
-        int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-
+    public void shiftWorkingDaysOnCreate() {
         int count = 0;
 
-        for (int i = 1; i <= daysInMonth; i++) {
+        for (int i = 1; i <= mDaysInMonth; i++) {
             //Log.i(TAG, "Count Down Is " + i);
 
             String sDayOfMonth = String.valueOf(i);
-            String sMonth = String.valueOf(monthToCal + 1);
-            String sYear = String.valueOf(yearToCal);
+            String sMonth = String.valueOf(iMonth + 1);
+            String sYear = String.valueOf(iYear);
             //Log.i(TAG, "DayOfMonth Count is " + sDayOfMonth);
 
             String currentDate = sDayOfMonth + "/" + (sMonth) + "/" + sYear;
             Log.i(TAG, "Current Date Count is " + currentDate);
 
             try {
-                SimpleDateFormat dates = new SimpleDateFormat("dd/MM/yyyy");
                 Date date1 = dates.parse(currentDate);
                 Log.i(TAG, "Formatted Date Count is " + date1);
 
@@ -156,8 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 long differenceDates = difference / (24 * 60 * 60 * 1000);
                 Log.i(TAG, "Difference of Date Count is " + differenceDates);
 
-                int a = (int) differenceDates;
-                int b = a % 9;
+                int b = (int) differenceDates % 9;
                 if (b == 8 || b == 0 || b == 1 || b == 2 || b == 3 || b == 4) {
                     count++;
                     Log.i(TAG, "Testing Count is " + count);
@@ -169,6 +177,33 @@ public class MainActivity extends AppCompatActivity {
 
         }
         mShiftDays.setText("" + count);
+        mShiftDays.setVisibility(View.VISIBLE);
+    }
+
+    public void shiftWorkingDaysOnResume() {
+        int count = 0;
+
+        for (int i = 1; i <= mDaysInMonth; i++) {
+            String sDayOfMonth = String.valueOf(i);
+            String currentDate = sDayOfMonth + "/" + (mSMonth) + "/" + mSYear;
+
+            try {
+                Date date1 = dates.parse(currentDate);
+                Date date2 = dates.parse(mFinalDate);
+                long difference = date1.getTime() - date2.getTime();
+                long differenceDates = difference / (24 * 60 * 60 * 1000);
+                int b = (int) differenceDates % 9;
+                if (b == 8 || b == 0 || b == 1 || b == 2 || b == 3 || b == 4) {
+                    count++;
+                }
+
+            } catch (Exception exception) {
+                Toast.makeText(MainActivity.this, "Unable to find difference", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        mShiftDays.setText("" + count);
+        mShiftDays.setVisibility(View.VISIBLE);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

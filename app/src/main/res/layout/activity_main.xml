@@ -44,7 +44,7 @@
                 android:layout_marginTop="10dp"
                 android:textSize="18sp"
                 android:fontFamily="@font/roboto_black"
-                android:text="First Morning Shift"
+                android:text=""
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintStart_toStartOf="@id/calender_container"
                 app:layout_constraintTop_toTopOf="@id/calender_container"

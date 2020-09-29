@@ -2,6 +2,6 @@ package com.example.calendertestapp;
 
 import androidx.lifecycle.ViewModel;
 
-public class DateViewModel extends ViewModel {
+public class ShiftDutyViewModel extends ViewModel {
 
 }

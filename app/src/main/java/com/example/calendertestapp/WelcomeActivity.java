@@ -127,4 +127,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
             default:
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this, WelcomeActivity.class));
+    }
 }

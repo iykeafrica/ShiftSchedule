@@ -2,7 +2,19 @@
 <resources>
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#4585bd</color>
+    <color name="colorBlue">#4585bd</color>
+    <color name="colorAccent">#ffffff</color>
     <color name="colorRed">#FF6347</color>
     <color name="colorWhite">#ffffff</color>
+
+    <color name="color1">#ef9a9a</color>
+    <color name="color2">#4db6ac</color>
+    <color name="color3">#fff176</color>
+    <color name="color4">#ce93d8</color>
+    <color name="color5">#ffc107</color>
+    <color name="color6">#66bb6a</color>
+    <color name="color7">#cddc39</color>
+    <color name="color8">#00e676</color>
+    <color name="color9">#ffcc80</color>
+
 </resources>

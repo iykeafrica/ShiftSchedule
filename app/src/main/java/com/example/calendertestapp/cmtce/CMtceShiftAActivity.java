@@ -1,7 +1,8 @@
-package com.example.calendertestapp;
+package com.example.calendertestapp.cmtce;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -10,31 +11,41 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.calendertestapp.R;
+import com.example.calendertestapp.ShiftScheduleActivity;
+import com.example.calendertestapp.ShiftScheduleViewModel;
+
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
+public class CMtceShiftAActivity extends AppCompatActivity {
+
+    private static final String TAG = ShiftScheduleActivity.class.getSimpleName();
     public static final int SHIFT_CYCLE_DAYS = 9;
     private TextView mShiftView, mWeekday, mDayOfMonth, mMonth, mShiftDays;
     private Date mNow, mDateOnCreate, mDateOnResume;
-    private String mCurrentDate;
-    private static final String mFinalDate = "02/01/1970";
-    private int iYear;
-    private int iMonth;
-    private int mDaysInMonth;
+
     private SimpleDateFormat dates = new SimpleDateFormat("dd/MM/yyyy");
     private CalendarView mCalendarView;
     private Calendar mCalendar;
 
+    private ShiftScheduleViewModel mViewModel;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_shift_schedule);
+
+        ViewModelProvider provider = new ViewModelProvider(getViewModelStore(), ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()));
+        mViewModel = provider.get(ShiftScheduleViewModel.class);
+
+        if (savedInstanceState != null && mViewModel.mIsNewlyCreated){
+            mViewModel.restoreState(savedInstanceState);
+        }
+        mViewModel.mIsNewlyCreated = false;
 
         mNow = new Date();
         mDateOnCreate = new Date();
@@ -49,17 +60,25 @@ public class MainActivity extends AppCompatActivity {
         mCalendarView = findViewById(R.id.calendar_view);
 
         calenderDateClick();
+    }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (outState != null){
+            mViewModel.saveState(outState);
+        }
     }
 
     private void calenderDateClick() {
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                iYear = year;
-                iMonth = (month + 1);
+                mViewModel.iYear = year;
+                mViewModel.iMonth = (month + 1);
 
 
-                mCurrentDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+                mViewModel.mCurrentDate = dayOfMonth + "/" + (month + 1) + "/" + year;
 
                 mDateOnCreate = new Date(year, month, dayOfMonth);
                 mNow = new Date(year, month, (dayOfMonth - 1));
@@ -69,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 shiftDutyCheck();
 
                 mCalendar = new GregorianCalendar(year, month, dayOfMonth);
-                mDaysInMonth = mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+                mViewModel.mDaysInMonth = mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
                 shiftWorkingDays();
             }
         });
@@ -80,11 +99,8 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE");
         Format formatter = new SimpleDateFormat("MMMM");
 
-        mMonth.setText("" + formatter.format(mNow));
+        mMonth.setText("" + formatter.format(mDateOnCreate));
         mWeekday.setText("" + simpleDateFormat.format(mNow));
-
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//        mDateView.setText("" + today.format(formatter));
     }
 
     protected void onResume() {
@@ -95,29 +111,29 @@ public class MainActivity extends AppCompatActivity {
         cal.setTime(mDateOnResume);
 
         int day = cal.get(Calendar.DAY_OF_MONTH);
-        iMonth = cal.get(Calendar.MONTH) + 1;
-        iYear = cal.get(Calendar.YEAR);
+        mViewModel.iMonth = cal.get(Calendar.MONTH) + 1;
+        mViewModel.iYear = cal.get(Calendar.YEAR);
 
-        String onResumeDate =  day + "/" + iMonth + "/" + iYear;
+        String onResumeDate = day + "/" + mViewModel.iMonth + "/" + mViewModel.iYear;
 
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(mDateOnCreate);
         String onCreateDate = cal2.get(Calendar.DAY_OF_MONTH) + "/" + (cal2.get(Calendar.MONTH) + 1) + "/" + cal2.get(Calendar.YEAR);
 
-        if (onResumeDate.equals(onCreateDate)){
+        if (onResumeDate.equals(onCreateDate)) {
             Log.i(TAG, "onResume: " + onResumeDate + " == " + onCreateDate);
 
             String sDayOfMonth = String.valueOf(day);
             mDayOfMonth.setText(sDayOfMonth);
 
-            String month = String.valueOf(iMonth);
-            String year = String.valueOf(iYear);
-            mCurrentDate = sDayOfMonth + "/" + month + "/" + year;
+            String month = String.valueOf(mViewModel.iMonth);
+            String year = String.valueOf(mViewModel.iYear);
+            mViewModel.mCurrentDate = sDayOfMonth + "/" + month + "/" + year;
 
             shiftDutyCheck();
             dateFormatter();
 
-            mDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+            mViewModel.mDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
             shiftWorkingDays();
 
         } else {
@@ -127,45 +143,45 @@ public class MainActivity extends AppCompatActivity {
 
     private void shiftDutyCheck() {
         try {
-            Date date1 = dates.parse(mCurrentDate);
-            Date date2 = dates.parse(mFinalDate);
+            Date date1 = dates.parse(mViewModel.mCurrentDate);
+            Date date2 = dates.parse(mViewModel.mFinalDate);
             long difference = date1.getTime() - date2.getTime();
             long differenceDates = difference / (24 * 60 * 60 * 1000);
 
             int b = (int) differenceDates % SHIFT_CYCLE_DAYS;
             if (b == 8) {
-                mShiftView.setText("First Morning Duty");
-            } else if (b == 0) {
-                mShiftView.setText("Second Morning Duty");
-            } else if (b == 1) {
-                mShiftView.setText("Third Morning Duty");
-            } else if (b == 2) {
-                mShiftView.setText("First Night Duty");
-            } else if (b == 3) {
-                mShiftView.setText("Second Night Duty");
-            } else if (b == 4) {
-                mShiftView.setText("Third Night Duty");
-            } else if (b == 5) {
-                mShiftView.setText("First Off Duty");
-            } else if (b == 6) {
-                mShiftView.setText("Second Off Duty");
-            } else if (b == 7) {
                 mShiftView.setText("Third Off Duty");
+            } else if (b == 0) {
+                mShiftView.setText("First Morning Duty");
+            } else if (b == 1) {
+                mShiftView.setText("Second Morning Duty");
+            } else if (b == 2) {
+                mShiftView.setText("Third Morning Duty");
+            } else if (b == 3) {
+                mShiftView.setText("First Night Duty");
+            } else if (b == 4) {
+                mShiftView.setText("Second Night Duty");
+            } else if (b == 5) {
+                mShiftView.setText("Third Night Duty");
+            } else if (b == 6) {
+                mShiftView.setText("First Off Duty");
+            } else if (b == 7) {
+                mShiftView.setText("Second Off Duty");
             }
         } catch (Exception exception) {
-            Toast.makeText(MainActivity.this, "Unable to find difference", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Unable to find difference", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void shiftWorkingDays() {
-        int count = 0;
+        mViewModel.mCount = 0;
 
-        for (int i = 1; i <= mDaysInMonth; i++) {
+        for (int i = 1; i <= mViewModel.mDaysInMonth; i++) {
             //Log.i(TAG, "Count Down Is " + i);
 
             String sDayOfMonth = String.valueOf(i);
-            String sMonth = String.valueOf(iMonth);
-            String sYear = String.valueOf(iYear);
+            String sMonth = String.valueOf(mViewModel.iMonth);
+            String sYear = String.valueOf(mViewModel.iYear);
             //Log.i(TAG, "DayOfMonth Count is " + sDayOfMonth);
 
             String currentDate = sDayOfMonth + "/" + (sMonth) + "/" + sYear;
@@ -175,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                 Date date1 = dates.parse(currentDate);
                 Log.i(TAG, "Formatted Date Count is " + date1);
 
-                Date date2 = dates.parse(mFinalDate);
+                Date date2 = dates.parse(mViewModel.mFinalDate);
                 long difference = date1.getTime() - date2.getTime();
                 //Log.i(TAG, "Difference of Date Count is " + difference);
 
@@ -183,50 +199,17 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "Difference of Date Count is " + differenceDates);
 
                 int b = (int) differenceDates % SHIFT_CYCLE_DAYS;
-                if (b == 8 || b == 0 || b == 1 || b == 2 || b == 3 || b == 4) {
-                    count++;
-                    Log.i(TAG, "Testing Count is " + count);
+                if (b == 5 || b == 0 || b == 1 || b == 2 || b == 3 || b == 4) {
+                    mViewModel.mCount++;
+                    Log.i(TAG, "Testing Count is " + mViewModel.mCount);
                 }
 
             } catch (Exception exception) {
-                Toast.makeText(MainActivity.this, "Unable to find difference", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Unable to find difference", Toast.LENGTH_SHORT).show();
             }
 
         }
-        mShiftDays.setText("" + count);
+        mShiftDays.setText("" + mViewModel.mCount);
         mShiftDays.setVisibility(View.VISIBLE);
     }
-
 }
-
-
-
-//
-//    @RequiresApi(api = Build.VERSION_CODES.O)
-//    public void calculateDaysInMonth(int yearToCal, int monthToCal) {
-//        //Java 8 and above
-//        YearMonth yearMonthObject = YearMonth.of(yearToCal, monthToCal);
-//        int daysInMonth = yearMonthObject.lengthOfMonth();
-//        mShiftDays.setText("" + daysInMonth);
-//    }
-//
-//    public void calDaysInMonth(int yearToCal, int monthToCal, int daysToCal) {
-//        //Java 7 and below
-//        // Create a calendar object and set year and month
-//        Calendar calendar = new GregorianCalendar(yearToCal, monthToCal, daysToCal);
-//
-//        // Get the number of days in that month
-//        int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-//        mShiftDays.setText("" + daysInMonth);
-//    }
-
-
-//    ZoneId defaultZoneId = ZoneId.systemDefault();
-//    Date date = Date.from(today.atStartOfDay(defaultZoneId).toInstant());
-//
-//    Instant instant = mNow.toInstant();
-//    ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
-//    LocalDate date1 = zdt.toLocalDate();
-
-//    LocalDateTime localDateToday = today.atStartOfDay();
-//    LocalDateTime localDateNow = LocalDateTime.ofInstant(Instant.from(mNow.toInstant().atZone(defaultZoneId)), ZoneId.systemDefault());

@@ -9,13 +9,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".security.SecurityShiftCActivity"></activity>
+        <activity android:name=".security.SecurityShiftBActivity" />
+        <activity android:name=".security.SecurityShiftAActivity" />
+        <activity android:name=".cmtce.CMtceShiftCActivity" />
+        <activity android:name=".cmtce.CMtceShiftBActivity" />
+        <activity android:name=".cmtce.CMtceShiftAActivity" />
+        <activity android:name=".plant.PlantShiftCActivity" />
+        <activity android:name=".plant.PlantShiftBActivity" />
+        <activity android:name=".plant.PlantShiftAActivity" />
+        <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ShiftScheduleActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

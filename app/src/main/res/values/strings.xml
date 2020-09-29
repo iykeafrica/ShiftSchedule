@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">ShiftScheduleApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="disclaimer"><u><b>Disclaimer</b></u> \nThis App is not connected to Dangote. \nIt was created solely for personal use \nwhile working  @OCP by IK.</string>
 </resources>

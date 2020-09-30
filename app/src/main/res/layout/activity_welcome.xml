@@ -4,28 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBlue"
+    android:background="#263238"
     tools:context=".WelcomeActivity">
+
+    <LinearLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/app_bar_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/app_bar_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:text="Shift Schedule App"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintStart_toStartOf="@id/app_bar_container"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="10dp"
+                app:layout_constraintBottom_toBottomOf="@id/app_bar_container"/>
+
+            <ImageView
+                android:id="@+id/more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_more"
+                app:layout_constraintEnd_toEndOf="@id/app_bar_container"
+                app:layout_constraintTop_toTopOf="@id/app_bar_container"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintBottom_toBottomOf="@id/app_bar_container"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:fontFamily="@font/roboto_medium"
         android:text="Select Your Shift"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/app_bar" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:background="@drawable/custom_button_1"
         android:layout_marginTop="24dp"
-        android:text="Plant Shift A"
+        android:background="@drawable/custom_button_1"
+        android:fontFamily="@font/roboto_black"
+        android:text="Plant\nShift A"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -35,7 +79,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/custom_button_2"
         android:layout_marginTop="24dp"
-        android:text="Plant Shift  B"
+        android:text="Plant\nShift B"
         app:layout_constraintEnd_toStartOf="@+id/button3"
         app:layout_constraintStart_toEndOf="@+id/button"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -47,7 +91,7 @@
         android:layout_marginTop="24dp"
         android:background="@drawable/custom_button_3"
         android:layout_marginEnd="16dp"
-        android:text="Plant Shift C"
+        android:text="Plant\nShift C"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -57,7 +101,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:background="@drawable/custom_button_4"
-        android:text="C.Mtce Shift A"
+        android:text="C.Mtce\nShift A"
         app:layout_constraintStart_toStartOf="@+id/button"
         app:layout_constraintTop_toBottomOf="@+id/button" />
 
@@ -67,7 +111,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:background="@drawable/custom_button_5"
-        android:text="C.Mtce Shift B"
+        android:text="C.Mtce\nShift B"
         app:layout_constraintEnd_toStartOf="@+id/button6"
         app:layout_constraintStart_toEndOf="@+id/button4"
         app:layout_constraintTop_toBottomOf="@+id/button2" />
@@ -78,7 +122,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:background="@drawable/custom_button_6"
-        android:text="C.Mtce Shift C"
+        android:text="C.Mtce\nShift C"
         app:layout_constraintEnd_toEndOf="@+id/button3"
         app:layout_constraintTop_toBottomOf="@+id/button3" />
 
@@ -89,7 +133,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:background="@drawable/custom_button_7"
-        android:text="Security Shift A"
+        android:text="Security\nShift A"
         app:layout_constraintStart_toStartOf="@+id/button4"
         app:layout_constraintTop_toBottomOf="@+id/button4" />
 
@@ -99,7 +143,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:background="@drawable/custom_button_8"
-        android:text="Security Shift B"
+        android:text="Security\nShift B"
         app:layout_constraintEnd_toStartOf="@+id/button7"
         app:layout_constraintStart_toEndOf="@+id/button9"
         app:layout_constraintTop_toBottomOf="@+id/button5" />
@@ -110,7 +154,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:background="@drawable/custom_button_9"
-        android:text="Security Shift C"
+        android:text="Security\nShift C"
         app:layout_constraintEnd_toEndOf="@+id/button6"
         app:layout_constraintTop_toBottomOf="@+id/button6" />
 
@@ -118,9 +162,12 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="20dp"
+        android:textSize="10sp"
+        android:fontFamily="@font/martel"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:textColor="@color/colorWhite"
         android:text="@string/disclaimer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

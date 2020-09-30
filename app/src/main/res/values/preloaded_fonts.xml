@@ -3,6 +3,8 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/</item>
         <item>@font/martel</item>
+        <item>@font/roboto</item>
         <item>@font/roboto_black</item>
+        <item>@font/roboto_medium</item>
     </array>
 </resources>

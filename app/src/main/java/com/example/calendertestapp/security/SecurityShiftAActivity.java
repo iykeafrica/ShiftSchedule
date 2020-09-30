@@ -1,19 +1,25 @@
 package com.example.calendertestapp.security;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.calendertestapp.R;
-import com.example.calendertestapp.ShiftScheduleActivity;
 import com.example.calendertestapp.ShiftScheduleViewModel;
+import com.example.calendertestapp.WelcomeActivity;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -23,7 +29,7 @@ import java.util.GregorianCalendar;
 
 public class SecurityShiftAActivity extends AppCompatActivity {
 
-    private static final String TAG = ShiftScheduleActivity.class.getSimpleName();
+    private static final String TAG = "SecurityShiftAActivity";
     public static final int SHIFT_CYCLE_DAYS = 9;
     private TextView mShiftView, mWeekday, mDayOfMonth, mMonth, mShiftDays;
     private Date mNow, mDateOnCreate, mDateOnResume;
@@ -33,11 +39,14 @@ public class SecurityShiftAActivity extends AppCompatActivity {
     private Calendar mCalendar;
 
     private ShiftScheduleViewModel mViewModel;
-
+    private long  mBackPressed = 0;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shift_schedule);
+        setContentView(R.layout.ui_shift_schedule);
+
+        assert getSupportActionBar() != null;
+        getSupportActionBar().hide();
 
         ViewModelProvider provider = new ViewModelProvider(getViewModelStore(), ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()));
         mViewModel = provider.get(ShiftScheduleViewModel.class);
@@ -58,6 +67,18 @@ public class SecurityShiftAActivity extends AppCompatActivity {
         mDayOfMonth = findViewById(R.id.day_of_month_view);
         mShiftView = findViewById(R.id.shift_view);
         mCalendarView = findViewById(R.id.calendar_view);
+        ImageView help = findViewById(R.id.help);
+
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                SharedPreferences.Editor editor = pref.edit();
+                editor.clear();
+                editor.apply();
+                startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
+            }
+        });
 
         calenderDateClick();
     }
@@ -211,5 +232,20 @@ public class SecurityShiftAActivity extends AppCompatActivity {
         }
         mShiftDays.setText("" + mViewModel.mCount);
         mShiftDays.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        long time = System.currentTimeMillis();
+        Log.i(TAG, "onBackPressed: " + time);
+
+
+        if (time - mBackPressed > 2500){
+            mBackPressed = time;
+            Toast.makeText(this, "Press Back again to exit", Toast.LENGTH_SHORT).show();
+        } else  {
+            moveTaskToBack(true);
+        }
     }
 }

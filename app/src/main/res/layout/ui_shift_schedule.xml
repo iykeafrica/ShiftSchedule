@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
-    tools:context=".MainActivity">
+    android:background="@android:color/black">
 
     <LinearLayout
         android:id="@+id/line1"
@@ -19,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/calender_container"
             app:layout_constraintBottom_toBottomOf="@+id/line1"
@@ -45,11 +44,20 @@
                 android:textSize="18sp"
                 android:fontFamily="@font/roboto_black"
                 android:text="FIRST MORNING DUTY"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorBlack"
                 app:layout_constraintStart_toStartOf="@id/calender_container"
                 app:layout_constraintTop_toTopOf="@id/calender_container"
                 app:layout_constraintEnd_toEndOf="@id/calender_container"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/help"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_help"
+                app:layout_constraintTop_toTopOf="@id/shift_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="10dp"/>
 
             <TextView
                 android:id="@+id/day_of_month_view"
@@ -58,7 +66,7 @@
                 android:layout_marginTop="18dp"
                 android:fontFamily="@font/roboto_black"
                 android:text="05"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorBlack"
                 android:textSize="50sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/calender_container"
@@ -70,7 +78,7 @@
                 android:id="@+id/weekday_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorBlack"
                 android:textStyle="bold"
                 android:fontFamily="@font/roboto_black"
                 android:text="WEDNESDAY"

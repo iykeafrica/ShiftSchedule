@@ -8,9 +8,11 @@ import android.app.Fragment;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -48,6 +50,18 @@ public class MoreActivity extends AppCompatActivity {
         mFeedBackTitle = findViewById(R.id.text_feedback_title);
         mFeedback = findViewById(R.id.text_feedback);
         mSubmitButton = findViewById(R.id.submit_button);
+
+        mFeedback.setInputType(InputType.TYPE_NULL);
+        mFeedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFeedback.setInputType(InputType.TYPE_CLASS_TEXT);
+                mFeedback.requestFocus();
+                InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                mgr.showSoftInput(mFeedback, InputMethodManager.SHOW_FORCED);
+
+            }
+        });
 
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override

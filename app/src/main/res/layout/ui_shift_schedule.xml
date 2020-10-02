@@ -56,6 +56,15 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_baseline_help"
                 app:layout_constraintTop_toTopOf="@id/shift_view"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="10dp"/>
+
+            <ImageView
+                android:id="@+id/refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_refresh"
+                app:layout_constraintTop_toTopOf="@id/shift_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="10dp"/>
 

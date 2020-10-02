@@ -70,6 +70,7 @@ public class PlantShiftAActivity extends AppCompatActivity {
         mShiftView = findViewById(R.id.shift_view);
         mCalendarView = findViewById(R.id.calendar_view);
         ImageView help = findViewById(R.id.help);
+        ImageView refresh = findViewById(R.id.refresh);
 
         help.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +82,14 @@ public class PlantShiftAActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
             }
         });
+
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(PlantShiftAActivity.this, PlantShiftAActivity.class));
+            }
+        });
+
         calenderDateClick();
     }
 
@@ -133,8 +142,6 @@ public class PlantShiftAActivity extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
-        //LocalDate today = LocalDate.now();
-
         Calendar cal = Calendar.getInstance();
 
         String onResumeDate;
@@ -142,52 +149,39 @@ public class PlantShiftAActivity extends AppCompatActivity {
         String month_;
         String year_;
         if (mViewModel.mCurrentDate != null) {
-            //mViewModel.mCurrentDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+
             try {
                 mDateOnResume = new SimpleDateFormat("dd/MM/yyyy").parse(mViewModel.mCurrentDate);
-                Log.i(TAG, "onResume: " + "If mViewModel.mCurrentDate != null. Then, mDateOnResume is: " + mDateOnResume);
 
             } catch (ParseException e) {
                 e.printStackTrace();
             }
             assert mDateOnResume != null;
             cal.setTime(mDateOnResume);
-            Log.i(TAG, "onResume: " + "cal.setTime(mDateOnResume) is: " + mDateOnResume);
-
             onResumeDate = mViewModel.mCurrentDate;
-            Log.i(TAG, "onResume: " + "mOnResumeDate = mViewModel.mCurrentDate: " + onResumeDate);
-
             mCalendarView.setDate(mDateOnResume.getTime());
-            Log.i(TAG, "onResume: " + "mCalendarView.setDate(mDateOnResume.getTime()) is: " + mCalendarView.getDate());
 
             day = mViewModel.iDay;
             Log.i(TAG, "onResume: " + "mDay is: " + day);
-
             month_ = String.valueOf(mViewModel.iMonth);
             Log.i(TAG, "onResume: " + "mMonth_ is: " + month_);
-
             year_ = String.valueOf(mViewModel.iYear);
             Log.i(TAG, "onResume: " + "mYear_ is: " + year_);
 
         } else {
             cal.setTime(mDateOnResume);
-            Log.i(TAG, "onResume: " + "If mViewModel.mCurrentDate == null. Then, mDateOnResume is: " + mDateOnResume);
-
             mViewModel.iDay = cal.get(Calendar.DAY_OF_MONTH);
-            day = mViewModel.iDay;
-            Log.i(TAG, "onResume: " + "mDay is: " + day);
-
             mViewModel.iMonth = cal.get(Calendar.MONTH) + 1;
             mViewModel.iYear = cal.get(Calendar.YEAR);
 
-            onResumeDate = day + "/" + mViewModel.iMonth + "/" + mViewModel.iYear;
-
-
+            day = mViewModel.iDay;
+            Log.i(TAG, "onResume: " + "mDay is: " + day);
             month_ = String.valueOf(mViewModel.iMonth);
             Log.i(TAG, "onResume: " + "mMonth_ is: " + month_);
-
             year_ = String.valueOf(mViewModel.iYear);
             Log.i(TAG, "onResume: " + "mYear_ is: " + year_);
+
+            onResumeDate = day + "/" + mViewModel.iMonth + "/" + mViewModel.iYear;
         }
 
 
@@ -203,37 +197,23 @@ public class PlantShiftAActivity extends AppCompatActivity {
 
             if (mViewModel.mCurrentDate == null) {
                 mViewModel.mCurrentDate = sDayOfMonth + "/" + month_ + "/" + year_;
-                Log.i(TAG, "onResume: " + "mViewModel.mCurrentDate is null: " + mViewModel.mCurrentDate);
 
-                Log.i(TAG, "onResume: " + "before if final");
-                dateFormatter();
             } else {
-                Log.i(TAG, "onResume: " + "mViewModel.mCurrentDate is not null: " + mViewModel.mCurrentDate);
-                Log.i(TAG, "onResume: " + "before else final");
-                Log.i(TAG, "onResume: " + "mDay is: " + mViewModel.iDay);
-
                 mDayOfMonth.setText("" + mViewModel.iDay);
-                dateFormatter();
             }
-
+            dateFormatter();
             shiftDutyCheck();
-
-            mViewModel.mDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-            shiftWorkingDays();
 
         } else {
             Log.i(TAG, "onResume: " + onResumeDate + " != " + onCreateDate);
-
             shiftDutyCheck();
-//            dateFormatter();
 
             if (mViewModel.iDay != 0) {
-                Log.i(TAG, "onResume: " + "if final");
                 mDayOfMonth.setText("" + day);
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE");
                 Format formatter = new SimpleDateFormat("MMMM");
-                Log.i(TAG, "onResume: " + "month is " + mViewModel.iMonth);
+
                 mMonth.setText("" + formatter.format(mDateOnResume));
                 mWeekday.setText("" + simpleDateFormat.format(mDateOnResume));
 
@@ -242,9 +222,9 @@ public class PlantShiftAActivity extends AppCompatActivity {
                 dateFormatter();
             }
 
-            mViewModel.mDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-            shiftWorkingDays();
         }
+        mViewModel.mDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        shiftWorkingDays();
     }
 
     private void shiftDutyCheck() {
@@ -282,22 +262,16 @@ public class PlantShiftAActivity extends AppCompatActivity {
     public void shiftWorkingDays() {
         mViewModel.mCount = 0;
 
-        Log.i(TAG, "mViewModel values month " + mViewModel.iMonth);
-        Log.i(TAG, "mViewModel values year " + mViewModel.iYear);
         for (int i = 1; i <= mViewModel.mDaysInMonth; i++) {
             //Log.i(TAG, "Count Down Is " + i);
 
             String sDayOfMonth = String.valueOf(i);
-            Log.i(TAG, "Testing days of month " + sDayOfMonth);
             String sMonth = String.valueOf(mViewModel.iMonth);
-            Log.i(TAG, "onSelectedDayChange: " + sMonth);
             String sYear = String.valueOf(mViewModel.iYear);
-            Log.i(TAG, "onSelectedDayChange: " + sYear);
             //Log.i(TAG, "DayOfMonth Count is " + sDayOfMonth);
 
             String currentDate = sDayOfMonth + "/" + (sMonth) + "/" + sYear;
             Log.i(TAG, "Current Date Count is " + currentDate);
-            Log.i(TAG, "onSelectedDayChange: " + currentDate);
 
             try {
                 Date date1 = dates.parse(currentDate);
@@ -311,7 +285,7 @@ public class PlantShiftAActivity extends AppCompatActivity {
                 Log.i(TAG, "Difference of Date Count is " + differenceDates);
 
                 int b = (int) differenceDates % SHIFT_CYCLE_DAYS;
-                Log.i(TAG, "Testing value of b " + b);
+
                 if (b == 8 || b == 0 || b == 1 || b == 2 || b == 3 || b == 4) {
                     mViewModel.mCount++;
                     Log.i(TAG, "shiftWorkingDays: " + mViewModel.mCount);

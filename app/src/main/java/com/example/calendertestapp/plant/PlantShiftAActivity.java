@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,7 +22,9 @@ import com.example.calendertestapp.R;
 import com.example.calendertestapp.ShiftScheduleViewModel;
 import com.example.calendertestapp.WelcomeActivity;
 
+import java.text.DateFormat;
 import java.text.Format;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,6 +42,10 @@ public class PlantShiftAActivity extends AppCompatActivity {
 
     private ShiftScheduleViewModel mViewModel;
     private long mBackPressed = 0;
+    private String mOnResumeDate;
+    private int mDay;
+    private String mMonth_;
+    private String mYear_;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,16 +100,20 @@ public class PlantShiftAActivity extends AppCompatActivity {
     private void calenderDateClick() {
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                mViewModel.iYear = year;
+                mViewModel.iDay = dayOfMonth;
                 mViewModel.iMonth = (month + 1);
+                mViewModel.iYear = year;
 
 
                 mViewModel.mCurrentDate = dayOfMonth + "/" + (month + 1) + "/" + year;
 
-                mDateOnCreate = new Date(year, month, dayOfMonth);
-                mNow = new Date(year, month, (dayOfMonth - 1));
+//                mDateOnCreate = new Date(year, month, dayOfMonth);
+//                mNow = new Date(year, month, (dayOfMonth - 1));
 
-                mDayOfMonth.setText("" + dayOfMonth);
+                mDateOnCreate = new Date( mViewModel.iYear, mViewModel.iMonth, mViewModel.iDay);
+                mNow = new Date(mViewModel.iYear, mViewModel.iMonth, (mViewModel.iDay - 1));
+
+                mDayOfMonth.setText("" + mViewModel.iDay);
                 dateFormatter();
                 shiftDutyCheck();
 
@@ -127,36 +138,108 @@ public class PlantShiftAActivity extends AppCompatActivity {
         //LocalDate today = LocalDate.now();
 
         Calendar cal = Calendar.getInstance();
-        cal.setTime(mDateOnResume);
 
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        mViewModel.iMonth = cal.get(Calendar.MONTH) + 1;
-        mViewModel.iYear = cal.get(Calendar.YEAR);
+        if (mViewModel.mCurrentDate != null){
+            //mViewModel.mCurrentDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+            try {
+                mDateOnResume = new SimpleDateFormat("dd/MM/yyyy").parse(mViewModel.mCurrentDate);
+                Log.i(TAG, "onResume: " + "If mViewModel.mCurrentDate != null. Then, mDateOnResume is: " + mDateOnResume);
 
-        String onResumeDate = day + "/" + mViewModel.iMonth + "/" + mViewModel.iYear;
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            assert mDateOnResume != null;
+            cal.setTime(mDateOnResume);
+            Log.i(TAG, "onResume: " + "cal.setTime(mDateOnResume) is: " + mDateOnResume);
+
+            mOnResumeDate = mViewModel.mCurrentDate;
+            Log.i(TAG, "onResume: " + "mOnResumeDate = mViewModel.mCurrentDate: " + mOnResumeDate);
+
+            mDay = Integer.parseInt(mViewModel.mCurrentDate.substring(0,1));
+            Log.i(TAG, "onResume: " + "mDay is: " + mDay);
+
+            mMonth_ = mViewModel.mCurrentDate.substring(2,4);
+            Log.i(TAG, "onResume: " + "mMonth_ is: " + mMonth_);
+
+            mYear_ = mViewModel.mCurrentDate.substring(5,9);
+            Log.i(TAG, "onResume: " + "mYear_ is: " + mYear_);
+
+        } else {
+            cal.setTime(mDateOnResume);
+            Log.i(TAG, "onResume: " + "If mViewModel.mCurrentDate == null. Then, mDateOnResume is: " + mDateOnResume);
+
+            mDay = cal.get(Calendar.DAY_OF_MONTH);
+            Log.i(TAG, "onResume: " + "mDay is: " + mDay);
+
+            mViewModel.iMonth = cal.get(Calendar.MONTH) + 1;
+            mViewModel.iYear = cal.get(Calendar.YEAR);
+
+            mOnResumeDate = mDay + "/" + mViewModel.iMonth + "/" + mViewModel.iYear;
+
+            mMonth_ = String.valueOf(mViewModel.iMonth);
+            Log.i(TAG, "onResume: " + "mMonth_ is: " + mMonth_);
+
+            mYear_ = String.valueOf(mViewModel.iYear);
+            Log.i(TAG, "onResume: " + "mYear_ is: " + mYear_);
+        }
+
+
 
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(mDateOnCreate);
         String onCreateDate = cal2.get(Calendar.DAY_OF_MONTH) + "/" + (cal2.get(Calendar.MONTH) + 1) + "/" + cal2.get(Calendar.YEAR);
 
-        if (onResumeDate.equals(onCreateDate)) {
-            Log.i(TAG, "onResume: " + onResumeDate + " == " + onCreateDate);
+        if (mOnResumeDate.equals(onCreateDate)) {
+            Log.i(TAG, "onResume: " + mOnResumeDate + " == " + onCreateDate);
 
-            String sDayOfMonth = String.valueOf(day);
+            String sDayOfMonth = String.valueOf(mDay);
             mDayOfMonth.setText(sDayOfMonth);
 
-            String month = String.valueOf(mViewModel.iMonth);
-            String year = String.valueOf(mViewModel.iYear);
-            mViewModel.mCurrentDate = sDayOfMonth + "/" + month + "/" + year;
+            String month = mMonth_;
+            String year = mYear_;
+
+            if (mViewModel.mCurrentDate == null){
+                mViewModel.mCurrentDate = sDayOfMonth + "/" + month + "/" + year;
+                Log.i(TAG, "onResume: " + "mViewModel.mCurrentDate is null: " + mViewModel.mCurrentDate);
+            }
+            Log.i(TAG, "onResume: " + "mViewModel.mCurrentDate is not null: " + mViewModel.mCurrentDate);
 
             shiftDutyCheck();
-            dateFormatter();
+//            dateFormatter();
+            if (mViewModel.iDay != 0) {
+                mDayOfMonth.setText("" + mViewModel.iDay);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE");
+                Format formatter = new SimpleDateFormat("MMMM");
+
+                mMonth.setText("" + formatter.format(mDateOnResume));
+                mWeekday.setText("" + simpleDateFormat.format(mDateOnResume));
+            } else {
+                dateFormatter();
+            }
+
 
             mViewModel.mDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
             shiftWorkingDays();
 
         } else {
-            Log.i(TAG, "onResume: " + onResumeDate + " != " + onCreateDate);
+            Log.i(TAG, "onResume: " + mOnResumeDate + " != " + onCreateDate);
+
+            shiftDutyCheck();
+//            dateFormatter();
+
+            if (mViewModel.iDay != 0) {
+                mDayOfMonth.setText("" + mViewModel.iDay);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE");
+                Format formatter = new SimpleDateFormat("MMMM");
+
+                mMonth.setText("" + formatter.format(mDateOnResume));
+                mWeekday.setText("" + simpleDateFormat.format(mDateOnResume));
+            } else {
+                dateFormatter();
+            }
+
+            mViewModel.mDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+            shiftWorkingDays();
         }
     }
 

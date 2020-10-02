@@ -42,10 +42,6 @@ public class PlantShiftAActivity extends AppCompatActivity {
 
     private ShiftScheduleViewModel mViewModel;
     private long mBackPressed = 0;
-    private String mOnResumeDate;
-    private int mDay;
-    private String mMonth_;
-    private String mYear_;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +53,7 @@ public class PlantShiftAActivity extends AppCompatActivity {
         ViewModelProvider provider = new ViewModelProvider(getViewModelStore(), ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()));
         mViewModel = provider.get(ShiftScheduleViewModel.class);
 
-        if (savedInstanceState != null && mViewModel.mIsNewlyCreated){
+        if (savedInstanceState != null && mViewModel.mIsNewlyCreated) {
             mViewModel.restoreState(savedInstanceState);
         }
         mViewModel.mIsNewlyCreated = false;
@@ -92,7 +88,7 @@ public class PlantShiftAActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        if (outState != null){
+        if (outState != null) {
             mViewModel.saveState(outState);
         }
     }
@@ -107,18 +103,20 @@ public class PlantShiftAActivity extends AppCompatActivity {
 
                 mViewModel.mCurrentDate = dayOfMonth + "/" + (month + 1) + "/" + year;
 
-//                mDateOnCreate = new Date(year, month, dayOfMonth);
-//                mNow = new Date(year, month, (dayOfMonth - 1));
+                mDateOnCreate = new Date(year, month, dayOfMonth);
+                mNow = new Date(year, month, (dayOfMonth - 1));
 
-                mDateOnCreate = new Date( mViewModel.iYear, mViewModel.iMonth, mViewModel.iDay);
-                mNow = new Date(mViewModel.iYear, mViewModel.iMonth, (mViewModel.iDay - 1));
+//                mDateOnCreate = new Date(mViewModel.iYear, mViewModel.iMonth, mViewModel.iDay);
+//                mNow = new Date(mViewModel.iYear, mViewModel.iMonth, (mViewModel.iDay - 1));
 
-                mDayOfMonth.setText("" + mViewModel.iDay);
+                Log.i(TAG, "onSelectedDayChange: " + "onCreate");
+                mDayOfMonth.setText("" + dayOfMonth);
                 dateFormatter();
                 shiftDutyCheck();
 
                 mCalendar = new GregorianCalendar(year, month, dayOfMonth);
                 mViewModel.mDaysInMonth = mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+                Log.i(TAG, "onSelectedDayChange: " + mViewModel.mDaysInMonth);
                 shiftWorkingDays();
             }
         });
@@ -139,7 +137,11 @@ public class PlantShiftAActivity extends AppCompatActivity {
 
         Calendar cal = Calendar.getInstance();
 
-        if (mViewModel.mCurrentDate != null){
+        String onResumeDate;
+        int day;
+        String month_;
+        String year_;
+        if (mViewModel.mCurrentDate != null) {
             //mViewModel.mCurrentDate = dayOfMonth + "/" + (month + 1) + "/" + year;
             try {
                 mDateOnResume = new SimpleDateFormat("dd/MM/yyyy").parse(mViewModel.mCurrentDate);
@@ -152,89 +154,91 @@ public class PlantShiftAActivity extends AppCompatActivity {
             cal.setTime(mDateOnResume);
             Log.i(TAG, "onResume: " + "cal.setTime(mDateOnResume) is: " + mDateOnResume);
 
-            mOnResumeDate = mViewModel.mCurrentDate;
-            Log.i(TAG, "onResume: " + "mOnResumeDate = mViewModel.mCurrentDate: " + mOnResumeDate);
+            onResumeDate = mViewModel.mCurrentDate;
+            Log.i(TAG, "onResume: " + "mOnResumeDate = mViewModel.mCurrentDate: " + onResumeDate);
 
-            mDay = Integer.parseInt(mViewModel.mCurrentDate.substring(0,1));
-            Log.i(TAG, "onResume: " + "mDay is: " + mDay);
+            mCalendarView.setDate(mDateOnResume.getTime());
+            Log.i(TAG, "onResume: " + "mCalendarView.setDate(mDateOnResume.getTime()) is: " + mCalendarView.getDate());
 
-            mMonth_ = mViewModel.mCurrentDate.substring(2,4);
-            Log.i(TAG, "onResume: " + "mMonth_ is: " + mMonth_);
+            day = mViewModel.iDay;
+            Log.i(TAG, "onResume: " + "mDay is: " + day);
 
-            mYear_ = mViewModel.mCurrentDate.substring(5,9);
-            Log.i(TAG, "onResume: " + "mYear_ is: " + mYear_);
+            month_ = String.valueOf(mViewModel.iMonth);
+            Log.i(TAG, "onResume: " + "mMonth_ is: " + month_);
+
+            year_ = String.valueOf(mViewModel.iYear);
+            Log.i(TAG, "onResume: " + "mYear_ is: " + year_);
 
         } else {
             cal.setTime(mDateOnResume);
             Log.i(TAG, "onResume: " + "If mViewModel.mCurrentDate == null. Then, mDateOnResume is: " + mDateOnResume);
 
-            mDay = cal.get(Calendar.DAY_OF_MONTH);
-            Log.i(TAG, "onResume: " + "mDay is: " + mDay);
+            mViewModel.iDay = cal.get(Calendar.DAY_OF_MONTH);
+            day = mViewModel.iDay;
+            Log.i(TAG, "onResume: " + "mDay is: " + day);
 
             mViewModel.iMonth = cal.get(Calendar.MONTH) + 1;
             mViewModel.iYear = cal.get(Calendar.YEAR);
 
-            mOnResumeDate = mDay + "/" + mViewModel.iMonth + "/" + mViewModel.iYear;
+            onResumeDate = day + "/" + mViewModel.iMonth + "/" + mViewModel.iYear;
 
-            mMonth_ = String.valueOf(mViewModel.iMonth);
-            Log.i(TAG, "onResume: " + "mMonth_ is: " + mMonth_);
 
-            mYear_ = String.valueOf(mViewModel.iYear);
-            Log.i(TAG, "onResume: " + "mYear_ is: " + mYear_);
+            month_ = String.valueOf(mViewModel.iMonth);
+            Log.i(TAG, "onResume: " + "mMonth_ is: " + month_);
+
+            year_ = String.valueOf(mViewModel.iYear);
+            Log.i(TAG, "onResume: " + "mYear_ is: " + year_);
         }
-
 
 
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(mDateOnCreate);
         String onCreateDate = cal2.get(Calendar.DAY_OF_MONTH) + "/" + (cal2.get(Calendar.MONTH) + 1) + "/" + cal2.get(Calendar.YEAR);
 
-        if (mOnResumeDate.equals(onCreateDate)) {
-            Log.i(TAG, "onResume: " + mOnResumeDate + " == " + onCreateDate);
+        if (onResumeDate.equals(onCreateDate)) {
+            Log.i(TAG, "onResume: " + onResumeDate + " == " + onCreateDate);
 
-            String sDayOfMonth = String.valueOf(mDay);
+            String sDayOfMonth = String.valueOf(day);
             mDayOfMonth.setText(sDayOfMonth);
 
-            String month = mMonth_;
-            String year = mYear_;
-
-            if (mViewModel.mCurrentDate == null){
-                mViewModel.mCurrentDate = sDayOfMonth + "/" + month + "/" + year;
+            if (mViewModel.mCurrentDate == null) {
+                mViewModel.mCurrentDate = sDayOfMonth + "/" + month_ + "/" + year_;
                 Log.i(TAG, "onResume: " + "mViewModel.mCurrentDate is null: " + mViewModel.mCurrentDate);
-            }
-            Log.i(TAG, "onResume: " + "mViewModel.mCurrentDate is not null: " + mViewModel.mCurrentDate);
 
-            shiftDutyCheck();
-//            dateFormatter();
-            if (mViewModel.iDay != 0) {
-                mDayOfMonth.setText("" + mViewModel.iDay);
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE");
-                Format formatter = new SimpleDateFormat("MMMM");
-
-                mMonth.setText("" + formatter.format(mDateOnResume));
-                mWeekday.setText("" + simpleDateFormat.format(mDateOnResume));
+                Log.i(TAG, "onResume: " + "before if final");
+                dateFormatter();
             } else {
+                Log.i(TAG, "onResume: " + "mViewModel.mCurrentDate is not null: " + mViewModel.mCurrentDate);
+                Log.i(TAG, "onResume: " + "before else final");
+                Log.i(TAG, "onResume: " + "mDay is: " + mViewModel.iDay);
+
+                mDayOfMonth.setText("" + mViewModel.iDay);
                 dateFormatter();
             }
 
+            shiftDutyCheck();
 
             mViewModel.mDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
             shiftWorkingDays();
 
         } else {
-            Log.i(TAG, "onResume: " + mOnResumeDate + " != " + onCreateDate);
+            Log.i(TAG, "onResume: " + onResumeDate + " != " + onCreateDate);
 
             shiftDutyCheck();
 //            dateFormatter();
 
             if (mViewModel.iDay != 0) {
-                mDayOfMonth.setText("" + mViewModel.iDay);
+                Log.i(TAG, "onResume: " + "if final");
+                mDayOfMonth.setText("" + day);
+
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE");
                 Format formatter = new SimpleDateFormat("MMMM");
-
+                Log.i(TAG, "onResume: " + "month is " + mViewModel.iMonth);
                 mMonth.setText("" + formatter.format(mDateOnResume));
                 mWeekday.setText("" + simpleDateFormat.format(mDateOnResume));
+
             } else {
+                Log.i(TAG, "onResume: " + "else final");
                 dateFormatter();
             }
 
@@ -278,16 +282,22 @@ public class PlantShiftAActivity extends AppCompatActivity {
     public void shiftWorkingDays() {
         mViewModel.mCount = 0;
 
+        Log.i(TAG, "mViewModel values month " + mViewModel.iMonth);
+        Log.i(TAG, "mViewModel values year " + mViewModel.iYear);
         for (int i = 1; i <= mViewModel.mDaysInMonth; i++) {
             //Log.i(TAG, "Count Down Is " + i);
 
             String sDayOfMonth = String.valueOf(i);
+            Log.i(TAG, "Testing days of month " + sDayOfMonth);
             String sMonth = String.valueOf(mViewModel.iMonth);
+            Log.i(TAG, "onSelectedDayChange: " + sMonth);
             String sYear = String.valueOf(mViewModel.iYear);
+            Log.i(TAG, "onSelectedDayChange: " + sYear);
             //Log.i(TAG, "DayOfMonth Count is " + sDayOfMonth);
 
             String currentDate = sDayOfMonth + "/" + (sMonth) + "/" + sYear;
             Log.i(TAG, "Current Date Count is " + currentDate);
+            Log.i(TAG, "onSelectedDayChange: " + currentDate);
 
             try {
                 Date date1 = dates.parse(currentDate);
@@ -301,8 +311,10 @@ public class PlantShiftAActivity extends AppCompatActivity {
                 Log.i(TAG, "Difference of Date Count is " + differenceDates);
 
                 int b = (int) differenceDates % SHIFT_CYCLE_DAYS;
+                Log.i(TAG, "Testing value of b " + b);
                 if (b == 8 || b == 0 || b == 1 || b == 2 || b == 3 || b == 4) {
                     mViewModel.mCount++;
+                    Log.i(TAG, "shiftWorkingDays: " + mViewModel.mCount);
                     Log.i(TAG, "Testing Count is " + mViewModel.mCount);
                 }
 
@@ -322,10 +334,10 @@ public class PlantShiftAActivity extends AppCompatActivity {
         Log.i(TAG, "onBackPressed: " + time);
 
 
-        if (time - mBackPressed > 2500){
+        if (time - mBackPressed > 2500) {
             mBackPressed = time;
             Toast.makeText(this, "Press Back again to exit", Toast.LENGTH_SHORT).show();
-        } else  {
+        } else {
             moveTaskToBack(true);
         }
     }

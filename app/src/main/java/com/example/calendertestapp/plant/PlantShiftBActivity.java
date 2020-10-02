@@ -220,6 +220,7 @@ public class PlantShiftBActivity extends AppCompatActivity {
                 Log.i(TAG, "Difference of Date Count is " + differenceDates);
 
                 int b = (int) differenceDates % SHIFT_CYCLE_DAYS;
+                Log.i(TAG, "Testing value of b " + b);
                 if (b == 8 || b == 0 || b == 1 || b == 5 || b == 6 || b == 7) {
                     mViewModel.mCount++;
                     Log.i(TAG, "Testing Count is " + mViewModel.mCount);

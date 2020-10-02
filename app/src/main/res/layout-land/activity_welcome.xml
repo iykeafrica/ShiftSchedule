@@ -72,18 +72,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:fontFamily="@font/roboto_medium"
-                    android:text="Select Your Shift"
+                    android:fontFamily="@font/martel"
+                    android:text="SELECT YOUR SHIFT"
                     android:textColor="@color/colorWhite"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <Button
+                <TextView
                     android:id="@+id/button"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    android:padding="10dp"
+                    android:textSize="14sp"
+                    android:gravity="center_horizontal"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
                     android:background="@drawable/custom_button_1"
@@ -92,10 +97,15 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-                <Button
+                <TextView
                     android:id="@+id/button2"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    android:padding="10dp"
+                    android:textSize="14sp"
+                    android:gravity="center_horizontal"
                     android:background="@drawable/custom_button_2"
                     android:layout_marginTop="24dp"
                     android:text="Plant\nShift B"
@@ -103,10 +113,15 @@
                     app:layout_constraintStart_toEndOf="@+id/button"
                     app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-                <Button
+                <TextView
                     android:id="@+id/button3"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    android:padding="10dp"
+                    android:textSize="14sp"
+                    android:gravity="center_horizontal"
                     android:layout_marginTop="24dp"
                     android:background="@drawable/custom_button_3"
                     android:layout_marginEnd="16dp"
@@ -114,20 +129,30 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-                <Button
+                <TextView
                     android:id="@+id/button4"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    android:padding="10dp"
+                    android:textSize="14sp"
+                    android:gravity="center_horizontal"
                     android:layout_marginTop="32dp"
                     android:background="@drawable/custom_button_4"
                     android:text="C.Mtce\nShift A"
                     app:layout_constraintStart_toStartOf="@+id/button"
                     app:layout_constraintTop_toBottomOf="@+id/button" />
 
-                <Button
+                <TextView
                     android:id="@+id/button5"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    android:padding="10dp"
+                    android:textSize="14sp"
+                    android:gravity="center_horizontal"
                     android:layout_marginTop="32dp"
                     android:background="@drawable/custom_button_5"
                     android:text="C.Mtce\nShift B"
@@ -135,10 +160,15 @@
                     app:layout_constraintStart_toEndOf="@+id/button4"
                     app:layout_constraintTop_toBottomOf="@+id/button2" />
 
-                <Button
+                <TextView
                     android:id="@+id/button6"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    android:padding="10dp"
+                    android:textSize="14sp"
+                    android:gravity="center_horizontal"
                     android:layout_marginTop="32dp"
                     android:background="@drawable/custom_button_6"
                     android:text="C.Mtce\nShift C"
@@ -146,20 +176,30 @@
                     app:layout_constraintTop_toBottomOf="@+id/button3" />
 
 
-                <Button
+                <TextView
                     android:id="@+id/button7"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    android:padding="10dp"
+                    android:textSize="14sp"
+                    android:gravity="center_horizontal"
                     android:layout_marginTop="32dp"
                     android:background="@drawable/custom_button_7"
                     android:text="Security\nShift A"
                     app:layout_constraintStart_toStartOf="@+id/button4"
                     app:layout_constraintTop_toBottomOf="@+id/button4" />
 
-                <Button
+                <TextView
                     android:id="@+id/button8"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    android:padding="10dp"
+                    android:textSize="14sp"
+                    android:gravity="center_horizontal"
                     android:layout_marginTop="32dp"
                     android:background="@drawable/custom_button_8"
                     android:text="Security\nShift B"
@@ -167,10 +207,15 @@
                     app:layout_constraintStart_toEndOf="@+id/button9"
                     app:layout_constraintTop_toBottomOf="@+id/button5" />
 
-                <Button
+                <TextView
                     android:id="@+id/button9"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    android:padding="10dp"
+                    android:textSize="14sp"
+                    android:gravity="center_horizontal"
                     android:layout_marginTop="32dp"
                     android:background="@drawable/custom_button_9"
                     android:text="Security\nShift C"

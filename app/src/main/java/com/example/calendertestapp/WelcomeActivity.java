@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.calendertestapp.cmtce.CMtceShiftAActivity;
 import com.example.calendertestapp.cmtce.CMtceShiftBActivity;
@@ -22,7 +23,7 @@ import com.example.calendertestapp.security.SecurityShiftCActivity;
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button plantShiftA, plantShiftB, plantShiftC, cMtceShiftA, cMtceShiftB, cMtceShiftC, securityShiftA, securityShiftB, securityShiftC;
+    TextView plantShiftA, plantShiftB, plantShiftC, cMtceShiftA, cMtceShiftB, cMtceShiftC, securityShiftA, securityShiftB, securityShiftC;
     private SharedPreferences.Editor mEditor;
 
     @Override

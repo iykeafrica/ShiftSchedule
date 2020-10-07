@@ -70,6 +70,7 @@ public class MoreActivity extends AppCompatActivity {
 
                 if (!TextUtils.isEmpty(mStringFeedback)) {
 
+                    submitFeedback(mStringFeedback);
                     if (isInternetAvailable(getApplicationContext())) {
                         Log.i(TAG, "Checking status..." + mStringFeedback);
                         submitFeedback(mStringFeedback);
@@ -77,7 +78,6 @@ public class MoreActivity extends AppCompatActivity {
                     } else {
                         errorDialog();
                     }
-
 
                 } else {
                     Toast.makeText(MoreActivity.this, "You cannot submit an empty feedback.", Toast.LENGTH_SHORT).show();
@@ -106,7 +106,7 @@ public class MoreActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.i(TAG, "onFailure: Checking status..." + t.getMessage());
+                Log.i(TAG, "onResponse: Checking status..." + t.getMessage());
                 errorDialog();
             }
         });
@@ -157,6 +157,4 @@ public class MoreActivity extends AppCompatActivity {
         mFeedback.setVisibility(View.INVISIBLE);
         mSubmitButton.setVisibility(View.INVISIBLE);
     }
-
-
 }
